@@ -1,8 +1,5 @@
 const express = require('express');
 const router = express.Router();
-
-const { Sequelize, QueryTypes } = require('sequelize');
-
 async function startup() {
   // setup webpush
   const webPush = require('web-push');
@@ -11,8 +8,8 @@ async function startup() {
   webPush.setVapidDetails('mailto:nghe.huavan@gmail.com', publicVapidKey, privateVapidKey);
 
   // setup database
-  const db = await require('./sqlite')();
-  
+  const db = await require('./sqlite');
+
   // Subscribe route => save to database
   router.post('/subscribe', async (req, res) => {
     const subscription = req.body;
@@ -20,9 +17,8 @@ async function startup() {
 
     // save to db: map user <=> subscription json
     const key = 'someUserId'; // should change on every user by token
-    await db.query('INSERT INTO "subscriptions" ("key","data") VALUES($key,$data) ON CONFLICT("key") DO UPDATE SET "data" = $data', {
+    await db.execute('INSERT INTO "subscriptions" ("key","data") VALUES($key,$data) ON CONFLICT("key") DO UPDATE SET "data" = $data', {
       bind: { key: key, data: JSON.stringify(subscription) },
-      type: QueryTypes.RAW,
     });
 
     res.status(201).json({});
@@ -32,9 +28,8 @@ async function startup() {
     const message = req.body;
 
     const key = 'someUserId'; // should change on every user by token
-    const rows = await db.query('SELECT * FROM "subscriptions" WHERE "key" = $$key', {
+    const rows = await db.select('SELECT * FROM "subscriptions" WHERE "key" = $$key', {
       bind: { key: key },
-      type: QueryTypes.SELECT,
     });
 
     if (rows.length > 0) {
@@ -48,9 +43,7 @@ async function startup() {
   });
 
   router.get('/db', async (req, res) => {
-    const rows = await db.query('SELECT * FROM "subscriptions"', {
-      type: QueryTypes.SELECT,
-    });
+    const rows = await db.select('SELECT * FROM "subscriptions"');
 
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(rows, null, 4));
