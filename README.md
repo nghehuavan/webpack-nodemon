@@ -1,6 +1,6 @@
 ## Run live on cyclic.sh
 
-3. Go to [https://nghehuavan-webpush.cyclic.app](https://nghehuavan-webpush.cyclic.app)
+3. Go to [https://webpack-nodemon.cyclic.app](https://webpack-nodemon.cyclic.app)
 
 ## Running the sample
 
