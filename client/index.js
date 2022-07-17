@@ -16,7 +16,7 @@ const registWebPush = async () => {
 const tryPush = async () => {
   await fetch('/api/push', {
     method: 'POST',
-    body: JSON.stringify({ title: 'Push notifications From Server sddsds' }),
+    body: JSON.stringify({ title: 'Push notifications From Server' }),
     headers: {
       'Content-Type': 'application/json',
     },
