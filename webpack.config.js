@@ -1,13 +1,24 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+
 const devServerPort = 8080;
 const expressServerPort = 8081;
 
 module.exports = {
-  mode: 'development',
+  mode: 'development', // 'production'
   entry: {
-    index: ['./src/index.js'],
-    about: ['./src/about.js'],
+    index: ['./client/index.js', './client/index.scss'],
+    about: ['./client/about.js'],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(scss|css)$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+      },
+    ],
   },
   output: {
     filename: '[name].js',
@@ -19,7 +30,8 @@ module.exports = {
     static: './dist',
     hot: true,
     port: devServerPort,
-    watchFiles: ['./src/*.html'],
+    watchFiles: ['./client/*.html'],
+    open: true,
     proxy: {
       '/api': {
         target: `http://localhost:${devServerPort}`,
@@ -28,15 +40,28 @@ module.exports = {
     },
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'index.html'),
-      filename: 'index.html',
-      chunks: ['index'],
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
     }),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'src', 'about.html'),
+      template: path.join(__dirname, 'client', 'index.html'),
+      filename: 'index.html',
+      chunks: ['index'],
+      inject: 'body',
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'client', 'about.html'),
       filename: 'about.html',
       chunks: ['about'],
+      inject: 'body',
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.join(__dirname, 'client', 'sw.js'),
+          to: path.join(__dirname, 'dist', 'sw.js'),
+        },
+      ],
     }),
   ],
 };
