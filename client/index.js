@@ -1,6 +1,6 @@
 const triggerSubscription = document.getElementById('trigger-subscription');
 triggerSubscription.addEventListener('click', () => {
-  registWebPush();
+  registWebPushNotification();
 });
 
 const triggerPush = document.getElementById('trigger-push');
@@ -37,9 +37,26 @@ const tryGetJson = async () => {
   document.getElementById('json-push').value = JSON.stringify(jsonMerge, null, 4);
 };
 
-const registWebPush = async () => {
-  registServiceWorker();
-  registBroadcastChannel();
+const registWebPushNotification = async () => {
+  if (!('Notification' in window)) {
+    console.error('This browser does not support notifications.');
+  } else if (Notification.permission === 'denied') {
+    console.error('Permission to receive notifications has been denied');
+  } else if (Notification.permission === 'granted') {
+    console.log('Permission to receive notifications has been granted');
+    registServiceWorker();
+    registBroadcastChannel();
+  } else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+      if (permission === 'granted') {
+        console.log('Permission to receive notifications has been granted');
+        registServiceWorker();
+        registBroadcastChannel();
+      } else {
+        console.error('Permission to receive notifications has been denied');
+      }
+    });
+  }
 };
 
 const tryPush = async () => {
