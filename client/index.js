@@ -11,9 +11,14 @@ triggerPush.addEventListener('click', () => {
 window.addEventListener('DOMContentLoaded', (event) => {
   tryGetJson();
 });
+const triggerGet = document.getElementById('trigger-get');
+triggerGet.addEventListener('click', () => {
+  tryGetJson();
+});
 
 const tryGetJson = async () => {
-  const resp = await fetch('https://973d6.mocklab.io/thing/meet', {
+  var url = document.getElementById('json-url').value;
+  const resp = await fetch(url, {
     method: 'GET',
   });
   const json = await resp.json();
