@@ -36,7 +36,7 @@ async function startup() {
       const subscription = JSON.parse(rows[0].data);
       console.log('[push] subscription:', subscription);
       console.log('message:', message);
-      webPush.sendNotification(subscription, JSON.stringify(message)).catch((error) => console.error(error));
+      await webPush.sendNotification(subscription, JSON.stringify(message));
     }
 
     res.status(201).json({});
