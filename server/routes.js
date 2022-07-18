@@ -17,7 +17,7 @@ async function startup() {
 
     // save to db: map user <=> subscription json
     const key = 'someUserId'; // should change on every user by token
-    await db.execute('INSERT INTO "subscriptions" ("key","data") VALUES($key,$data) ON CONFLICT("key") DO UPDATE SET "data" = $data', {
+    await db.insert('INSERT INTO "subscriptions" ("key","data") VALUES($key,$data) ON CONFLICT("key") DO UPDATE SET "data" = $data', {
       bind: { key: key, data: JSON.stringify(subscription) },
     });
 
