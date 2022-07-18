@@ -20,7 +20,7 @@ self.addEventListener('notificationclick', (e) => {
 
 async function processMessage(message) {
   sendToBroadcastChannel(message);
-  self.registration.showNotification(message.title, {
+  self.registration.showNotification("new message", {
     body: 'notify from server forward by services worker!',
     data: message,
   });

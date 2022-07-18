@@ -8,6 +8,35 @@ triggerPush.addEventListener('click', () => {
   tryPush();
 });
 
+window.addEventListener('DOMContentLoaded', (event) => {
+  tryGetJson();
+});
+
+const tryGetJson = async () => {
+  const resp = await fetch('https://973d6.mocklab.io/thing/meet', {
+    method: 'GET',
+  });
+  const json = await resp.json();
+  const info = {
+    id: 'test',
+    type: 1,
+    type_name: 'SOS着信中',
+    customer_name: 'XXXX樣',
+    property_name: 'AAAA',
+    room_number: '0105',
+  };
+  const meeting = JSON.parse(json.meeting);
+  const attendee = JSON.parse(json.attendee);
+  const jsonMerge = {
+    meeting: meeting,
+    attendee: attendee,
+    info: info,
+  };
+
+  console.log(jsonMerge);
+  document.getElementById('json-push').value = JSON.stringify(jsonMerge, null, 4);
+};
+
 const registWebPush = async () => {
   registServiceWorker();
   registBroadcastChannel();
@@ -16,7 +45,7 @@ const registWebPush = async () => {
 const tryPush = async () => {
   await fetch('/api/push', {
     method: 'POST',
-    body: JSON.stringify({ title: 'Push notifications From Server' }),
+    body: document.getElementById('json-push').value,
     headers: {
       'Content-Type': 'application/json',
     },
