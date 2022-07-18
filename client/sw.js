@@ -15,19 +15,19 @@ self.addEventListener('notificationclick', (event) => {
 });
 
 async function processMessage(data) {
-  const windowClients = await clients.matchAll({
+  const windows = await clients.matchAll({
     type: 'window',
     includeUncontrolled: true,
   });
-  console.log(windowClients);
+  console.log(windows);
 
-  if (!windowClients || windowClients.length == 0) {
-    self.registration.showNotification(data.message.title, {
-      body: data.message.body,
+  if (windows && windows.length > 0) {
+    sendToBroadcastChannel(data);
+  } else {
+    self.registration.showNotification(data.title, {
+      body: data.body,
       data: data,
     });
-  } else {
-    sendToBroadcastChannel(data);
   }
 }
 
