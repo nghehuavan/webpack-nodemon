@@ -17,24 +17,23 @@ const tryGetJson = async () => {
     method: 'GET',
   });
   const json = await resp.json();
-  const info = {
+  const meeting = JSON.parse(json.meeting);
+  const attendee = JSON.parse(json.attendee);
+
+  const message = {
     id: 'test',
+    title: 'SOS着信中',
+    body: `・顧客名:XXXX樣\n・物件名:AAAA\n・部屋番号:0105`,
     type: 1,
-    type_name: 'SOS着信中',
     customer_name: 'XXXX樣',
     property_name: 'AAAA',
     room_number: '0105',
-  };
-  const meeting = JSON.parse(json.meeting);
-  const attendee = JSON.parse(json.attendee);
-  const jsonMerge = {
     meeting: meeting,
     attendee: attendee,
-    info: info,
   };
 
-  console.log(jsonMerge);
-  document.getElementById('json-push').value = JSON.stringify(jsonMerge, null, 4);
+  console.log(message);
+  document.getElementById('json-push').value = JSON.stringify(message, null, 4);
 };
 
 const registWebPushNotification = async () => {

@@ -1,31 +1,37 @@
-function sendToBroadcastChannel(message) {
-  const channelGuilId = 'd235a86e-bc13-4539-b4a5-077de485a2fd';
-  new BroadcastChannel(channelGuilId).postMessage(message);
-}
-
-self.addEventListener('push', (e) => {
-  const data = e.data.json();
+self.addEventListener('push', (event) => {
+  const data = event.data.json();
   console.log('received message from web push server');
   console.log(data);
-  e.waitUntil(processMessage(data));
+
+  event.waitUntil(processMessage(data));
 });
 
-self.addEventListener('notificationclick', (e) => {
-  console.log(e);
-
-  const data = e.notification.data;
+self.addEventListener('notificationclick', (event) => {
+  const data = event.data;
+  console.log('received message from web push server');
   console.log(data);
-  e.waitUntil(processMessageClick(data));
+
+  event.waitUntil(processMessage(data));
 });
 
-async function processMessage(message) {
-  sendToBroadcastChannel(message);
-  self.registration.showNotification("new message", {
-    body: 'notify from server forward by services worker!',
-    data: message,
+async function processMessage(data) {
+  const windowClients = await clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true,
   });
+  console.log(windowClients);
+
+  if (!windowClients || windowClients.length == 0) {
+    self.registration.showNotification(data.message.title, {
+      body: data.message.body,
+      data: data,
+    });
+  } else {
+    sendToBroadcastChannel(data);
+  }
 }
 
-async function processMessageClick(message) {
-  sendToBroadcastChannel(message);
+function sendToBroadcastChannel(data) {
+  const channelGuilId = 'd235a86e-bc13-4539-b4a5-077de485a2fd';
+  new BroadcastChannel(channelGuilId).postMessage(data);
 }
