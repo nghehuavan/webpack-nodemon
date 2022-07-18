@@ -78,7 +78,6 @@ const registServiceWorker = async () => {
       scope: '/',
     });
 
-    console.log('waiting for acceptance');
     const subscription = await register.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
@@ -92,7 +91,6 @@ const registServiceWorker = async () => {
         'Content-Type': 'application/json',
       },
     });
-    console.log('acceptance complete');
   } else {
     console.error('Service workers are not supported in this browser');
   }
