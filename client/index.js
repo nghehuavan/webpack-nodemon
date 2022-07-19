@@ -78,22 +78,25 @@ const registServiceWorker = async () => {
   const publicVapidKey = 'BAJQxEDFDWhOHnjtXw2AqcYXJlS0oGYpfJvwsOxCTYq8gM1_vvkyyL4kl4rIdytt5zhvVPZHyGeP-CeD8Szc69Y';
 
   if ('serviceWorker' in navigator) {
-    const register = await navigator.serviceWorker.register('/sw.js', {
+    await navigator.serviceWorker.register('/sw.js', {
       scope: '/',
     });
 
-    const subscription = await register.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
-    });
-
-    // send [subscription] json for server save
-    await fetch('/api/subscribe', {
-      method: 'POST',
-      body: JSON.stringify(subscription),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    window.navigator.serviceWorker.ready.then(async function (registration) {
+      console.log('A service worker is active:', registration.active);
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
+      });
+  
+      // send [subscription] json for server save
+      await fetch('/api/subscribe', {
+        method: 'POST',
+        body: JSON.stringify(subscription),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
     });
   } else {
     console.error('Service workers are not supported in this browser');
