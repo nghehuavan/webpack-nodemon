@@ -9,14 +9,20 @@ triggerPush.addEventListener('click', () => {
 });
 
 window.addEventListener('DOMContentLoaded', (event) => {
-  tryGetJson();
-});
-const triggerGet = document.getElementById('trigger-get');
-triggerGet.addEventListener('click', () => {
-  tryGetJson();
+  tryGetJsonHotLine();
 });
 
-const tryGetJson = async () => {
+const triggerGet = document.getElementById('trigger-get-hotline');
+triggerGet.addEventListener('click', () => {
+  tryGetJsonHotLine();
+});
+
+const triggerGetSos = document.getElementById('trigger-get-sos');
+triggerGetSos.addEventListener('click', () => {
+  tryGetJsonSos();
+});
+
+const tryGetJsonHotLine = async () => {
   var url = document.getElementById('json-url').value;
   const resp = await fetch(url, {
     method: 'GET',
@@ -25,11 +31,11 @@ const tryGetJson = async () => {
   const meeting = JSON.parse(json.meeting);
   const attendee = JSON.parse(json.attendee);
 
-  const message = {
-    id: 'test',
-    title: 'SOS着信中',
-    body: `・顧客名:XXXX樣\n・物件名:AAAA\n・部屋番号:0105`,
+  const jsonType1 = {
     type: 1,
+    id: 'hotline_001',
+    title: 'ホットライン着信中',
+    body: `・顧客名:XXXX樣\n・物件名:AAAA\n・部屋番号:0105`,
     customer_name: 'XXXX樣',
     property_name: 'AAAA',
     room_number: '0105',
@@ -37,8 +43,24 @@ const tryGetJson = async () => {
     attendee: attendee,
   };
 
-  console.log(message);
-  document.getElementById('json-push-data').value = JSON.stringify(message, null, 4);
+  console.log(jsonType1);
+  document.getElementById('json-push-data').value = JSON.stringify(jsonType1, null, 4);
+};
+
+const tryGetJsonSos = async () => {
+  const jsonType2 = {
+    type: 2,
+    id: 'sos_001',
+    title: '緊急通報　受信中',
+    body: `・顧客名:XXXX樣\n・物件名:AAAA\n・部屋番号:0105`,
+    customer_name: 'XXXX樣',
+    property_name: 'AAAA',
+    room_number: '0105',
+    sos_title: '侵入',
+    url: 'https://raw.githubusercontent.com/nghehuavan/js-video-player-codec/main/video/frag/frag_ytb.mp4',
+  };
+
+  document.getElementById('json-push-data').value = JSON.stringify(jsonType2, null, 4);
 };
 
 const registWebPushNotification = async () => {
