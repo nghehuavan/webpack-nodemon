@@ -25,23 +25,25 @@ async function startup() {
   });
 
   router.post('/push', async (req, res) => {
-    const { data } = req.body;
-    let subscription = req.body.subscribe;
-    if (subscription == null) {
+    let { data, subscribe } = req.body;
+    if (subscribe == null) {
       console.log('[push] use subscribe json from sqlite');
       const key = 'someUserId'; // should change on every user by token
       const rows = await db.select('SELECT * FROM "subscriptions" WHERE "key" = $$key', {
         bind: { key: key },
       });
       if (rows.length > 0) {
-        subscription = JSON.parse(rows[0].data);
+        subscribe = JSON.parse(rows[0].data);
       }
     }
-
-    console.log('[push] subscription:', subscription);
-    await webPush.sendNotification(subscription, JSON.stringify(data));
-
-    res.status(201).json({});
+    if (subscribe) {
+      console.log('[push] subscription:', subscribe);
+      await webPush.sendNotification(subscribe, JSON.stringify(data));
+      res.status(201).json({});
+    }
+    else{
+      res.status(400).json({ message: 'subscription not found !' });
+    }
   });
 
   router.get('/db', async (req, res) => {
