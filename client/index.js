@@ -38,7 +38,7 @@ const tryGetJson = async () => {
   };
 
   console.log(message);
-  document.getElementById('json-push').value = JSON.stringify(message, null, 4);
+  document.getElementById('json-push-data').value = JSON.stringify(message, null, 4);
 };
 
 const registWebPushNotification = async () => {
@@ -64,9 +64,14 @@ const registWebPushNotification = async () => {
 };
 
 const tryPush = async () => {
+  const data = document.getElementById('json-push-data').value;
+  const subscribe = document.getElementById('json-push-subscribe').value;
   await fetch('/api/push', {
     method: 'POST',
-    body: document.getElementById('json-push').value,
+    body: JSON.stringify({
+      data: data ? JSON.parse(data) : null,
+      subscribe: subscribe ? JSON.parse(subscribe) : null,
+    }),
     headers: {
       'Content-Type': 'application/json',
     },
@@ -88,7 +93,9 @@ const registServiceWorker = async () => {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
       });
-  
+
+      document.getElementById('json-push-subscribe').value = JSON.stringify(subscription, null, 4);
+
       // send [subscription] json for server save
       await fetch('/api/subscribe', {
         method: 'POST',

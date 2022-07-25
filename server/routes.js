@@ -25,19 +25,21 @@ async function startup() {
   });
 
   router.post('/push', async (req, res) => {
-    const message = req.body;
-
-    const key = 'someUserId'; // should change on every user by token
-    const rows = await db.select('SELECT * FROM "subscriptions" WHERE "key" = $$key', {
-      bind: { key: key },
-    });
-
-    if (rows.length > 0) {
-      const subscription = JSON.parse(rows[0].data);
-      console.log('[push] subscription:', subscription);
-      console.log('message:', message);
-      await webPush.sendNotification(subscription, JSON.stringify(message));
+    const { data } = req.body;
+    let subscription = req.body.subscribe;
+    if (subscription == null) {
+      console.log('[push] use subscribe json from sqlite');
+      const key = 'someUserId'; // should change on every user by token
+      const rows = await db.select('SELECT * FROM "subscriptions" WHERE "key" = $$key', {
+        bind: { key: key },
+      });
+      if (rows.length > 0) {
+        subscription = JSON.parse(rows[0].data);
+      }
     }
+
+    console.log('[push] subscription:', subscription);
+    await webPush.sendNotification(subscription, JSON.stringify(data));
 
     res.status(201).json({});
   });

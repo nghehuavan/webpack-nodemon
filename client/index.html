@@ -17,13 +17,19 @@
 
   <div class="buttons">
     <button id="trigger-subscription" class="trigger-push">Subscription Push Notification</button>
+    <br />
+    <br />
     <div>
-      <label>Json for push</label>
-      <br />
-      <input type="text" id="json-url" value="https://3gvk7.mocklab.io/meeting" />      
+      <input type="text" id="json-url" value="https://3gvk7.mocklab.io/meeting" />
       <button id="trigger-get" class="trigger-push">get json</button>
       <br />
-      <textarea id="json-push" cols="100" , rows="20"></textarea>
+      <label>data json for push</label>
+      <br />
+      <textarea id="json-push-data" cols="100" , rows="20"></textarea>
+      <br />
+      <label>json subscribed (if not input => use SqliteDb in server node.js)</label>
+      <br />
+      <textarea id="json-push-subscribe" cols="100" , rows="5"></textarea>
       <br />
       <button id="trigger-push" class="trigger-push">Push Notification</button>
     </div>
