@@ -57,7 +57,7 @@ const tryGetJsonSos = async () => {
     property_name: 'AAAA',
     room_number: '0105',
     sos_title: '侵入',
-    url: 'https://raw.githubusercontent.com/nghehuavan/js-video-player-codec/main/video/frag/frag_ytb.mp4',
+    url: 'https://raw.githubusercontent.com/nghehuavan/js-video-player-codec/main/client/video/frag/ytb.mp4',
   };
 
   document.getElementById('json-push-data').value = JSON.stringify(jsonType2, null, 4);
