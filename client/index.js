@@ -38,7 +38,9 @@ const tryGetJsonHotLine = async () => {
     body: `・顧客名:XXXX樣\n・物件名:AAAA\n・部屋番号:0105`,
     customer_name: 'XXXX樣',
     property_name: 'AAAA',
-    room_number: '0105',
+    ap_number: '056693',
+    room_number: '1002',
+    article_code: null,
     meeting: meeting,
     attendee: attendee,
   };
@@ -55,7 +57,9 @@ const tryGetJsonSos = async () => {
     body: `・顧客名:XXXX樣\n・物件名:AAAA\n・部屋番号:0105`,
     customer_name: 'XXXX樣',
     property_name: 'AAAA',
-    room_number: '0105',
+    ap_number: '056693',
+    room_number: '1002',
+    article_code: null,
     sos_title: '侵入',
     url: 'https://raw.githubusercontent.com/nghehuavan/js-video-player-codec/main/client/video/frag/ytb.mp4',
   };
